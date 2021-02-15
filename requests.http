@@ -1,0 +1,17 @@
+POST http://localhost:5000/orchestration/orders
+Content-Type: application/json
+
+{
+  "orderDetails": "Details",
+  "address": "Address"
+}
+
+###
+
+POST http://localhost:5000/orchestration/orders/007e2890-a8c3-4db8-9702-ada0189679dd/accept
+Content-Type: application/json
+
+{
+}
+
+###

@@ -1,8 +1,8 @@
+using CommunicationFoodDelivery.Consumers;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace CommunicationFoodDelivery
 {
@@ -10,23 +10,29 @@ namespace CommunicationFoodDelivery
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
+            
+            services.AddMassTransit(x =>
+                {
+                    x.AddConsumer<CookDishConsumer>();
+                    x.AddConsumer<OrderPlacedConsumer>();
+                    x.AddConsumer<DeliverOrderConsumer>();
+
+                    x.AddSagaStateMachine<OrderStateMachine, OrderState>()
+                        .InMemoryRepository();
+
+                    x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
+                })
+                .AddMassTransitHostedService();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapControllers();
             });
         }
     }
