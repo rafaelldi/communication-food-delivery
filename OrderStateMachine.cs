@@ -25,7 +25,7 @@ namespace CommunicationFoodDelivery
     {
         public OrderStateMachine()
         {
-            InstanceState(x => x.CurrentState, Placed, Accepted);
+            InstanceState(x => x.CurrentState, Placed, Accepted, Cooked);
 
             Event(() => PlaceOrder, x => x.CorrelateById(m => m.Message.OrderId));
             Event(() => AcceptOrder, x => x.CorrelateById(m => m.Message.OrderId));
