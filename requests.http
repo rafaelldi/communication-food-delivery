@@ -2,13 +2,31 @@ POST http://localhost:5000/orchestration/orders
 Content-Type: application/json
 
 {
-  "orderDetails": "Details",
-  "address": "Address"
+  "orderDetails": "Burger",
+  "address": "Palace Square, 2"
 }
 
 ###
 
-POST http://localhost:5000/orchestration/orders/007e2890-a8c3-4db8-9702-ada0189679dd/accept
+POST http://localhost:5000/orchestration/orders/99271053-7720-43de-a2fa-74a7b4d61e48/accept
+Content-Type: application/json
+
+{
+}
+
+###
+
+POST http://localhost:5000/choreography/orders
+Content-Type: application/json
+
+{
+  "orderDetails": "Pizza",
+  "address": "Palace Square, 2"
+}
+
+###
+
+POST http://localhost:5000/choreography/orders/dd5b884e-f014-42c4-8c22-71d566508c08/accept
 Content-Type: application/json
 
 {

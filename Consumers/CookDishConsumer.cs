@@ -17,6 +17,8 @@ namespace CommunicationFoodDelivery.Consumers
 
         public async Task Consume(ConsumeContext<CookDish> context)
         {
+            await Task.Delay(500);
+
             var orderId = context.Message.OrderId;
             _logger.LogInformation("Dish for order with id = {id} was cooked", orderId.ToString());
             await context.Publish(new DishCooked {OrderId = orderId});
