@@ -14,13 +14,11 @@ namespace CommunicationFoodDelivery.Controllers
     public class OrdersChoreographyController : ControllerBase
     {
         private readonly IBus _bus;
-        private readonly IEndpointNameFormatter _formatter;
-        private static readonly Dictionary<Guid, (string OrderDetails, string Address)> _cash = new();
+        private static readonly Dictionary<Guid, (string OrderDetails, string Address)> Cash = new();
 
-        public OrdersChoreographyController(IBus bus, IEndpointNameFormatter formatter)
+        public OrdersChoreographyController(IBus bus)
         {
             _bus = bus;
-            _formatter = formatter;
         }
 
         [HttpPost]
@@ -28,7 +26,7 @@ namespace CommunicationFoodDelivery.Controllers
         {
             var orderId = Guid.NewGuid();
 
-            _cash.Add(orderId, (dto.OrderDetails, dto.Address));
+            Cash.Add(orderId, (dto.OrderDetails, dto.Address));
 
             await _bus.Publish(new Events.OrderPlaced
             {
@@ -42,22 +40,20 @@ namespace CommunicationFoodDelivery.Controllers
         [HttpPost("{id}/accept")]
         public async Task<IActionResult> AcceptOrder(Guid id)
         {
-            if (!_cash.TryGetValue(id, out var order))
+            if (!Cash.TryGetValue(id, out var order))
             {
                 throw new ArgumentException("Can't find order details");
             }
 
             var builder = new RoutingSlipBuilder(Guid.NewGuid());
 
-            var cookDishActivity = _formatter.ExecuteActivity<CookDishActivity, CookDishArgument>();
-            builder.AddActivity("CookDish", new Uri($"queue:{cookDishActivity}"), new CookDishArgument
+            builder.AddActivity("CookDish", new Uri("queue:CookDish_execute"), new CookDishArgument
             {
                 OrderId = id,
                 OrderDetails = order.OrderDetails
             });
 
-            var deliverOrderActivity = _formatter.ExecuteActivity<DeliverOrderActivity, DeliverOrderArgument>();
-            builder.AddActivity("DeliverOrder", new Uri($"queue:{deliverOrderActivity}"), new DeliverOrderArgument
+            builder.AddActivity("DeliverOrder", new Uri("queue:DeliverOrder_execute"), new DeliverOrderArgument
             {
                 OrderId = id,
                 Address = order.Address

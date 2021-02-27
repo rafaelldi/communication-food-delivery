@@ -16,6 +16,8 @@ namespace CommunicationFoodDelivery.Consumers
 
         public async Task Consume(ConsumeContext<OrderPlaced> context)
         {
+            _logger.LogInformation($"{nameof(OrderPlaced)} event received");
+
             await Task.Delay(500);
 
             _logger.LogInformation("Order with id = {id} and details = {details} was placed",

@@ -17,11 +17,13 @@ namespace CommunicationFoodDelivery.Consumers
 
         public async Task Consume(ConsumeContext<DeliverOrder> context)
         {
+            _logger.LogInformation($"{nameof(DeliverOrder)} command received");
+
             await Task.Delay(500);
 
             var orderId = context.Message.OrderId;
             _logger.LogInformation("Order with id = {id} was delivered", orderId.ToString());
-            await context.Publish(new OrderDelivered {OrderId = orderId});
+            await context.RespondAsync(new OrderDelivered {OrderId = orderId});
         }
     }
 }

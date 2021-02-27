@@ -17,8 +17,6 @@ namespace CommunicationFoodDelivery
             
             services.AddMassTransit(x =>
                 {
-                    x.SetEndpointNameFormatter(DefaultEndpointNameFormatter.Instance);
-                    
                     x.AddConsumer<CookDishConsumer>();
                     x.AddConsumer<OrderPlacedConsumer>();
                     x.AddConsumer<DeliverOrderConsumer>();

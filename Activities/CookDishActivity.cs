@@ -1,23 +1,27 @@
 using System.Threading.Tasks;
+using CommunicationFoodDelivery.Contracts;
+using MassTransit;
 using MassTransit.Courier;
-using Microsoft.Extensions.Logging;
 
 namespace CommunicationFoodDelivery.Activities
 {
     public class CookDishActivity : IExecuteActivity<CookDishArgument>
     {
-        private readonly ILogger<CookDishActivity> _logger;
+        private readonly IBus _bus;
 
-        public CookDishActivity(ILogger<CookDishActivity> logger)
+        public CookDishActivity(IBus bus)
         {
-            _logger = logger;
+            _bus = bus;
         }
 
         public async Task<ExecutionResult> Execute(ExecuteContext<CookDishArgument> context)
         {
-            await Task.Delay(500);
-
-            _logger.LogInformation("Dish for order with id = {id} was cooked", context.Arguments.OrderId);
+            var client = context.CreateRequestClient<Commands.CookDish>(_bus);
+            await client.GetResponse<Events.DishCooked>(new Commands.CookDish
+            {
+                OrderId = context.Arguments.OrderId,
+                OrderDetails = context.Arguments.OrderDetails
+            });
             return context.Completed();
         }
     }

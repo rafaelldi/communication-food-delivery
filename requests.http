@@ -8,7 +8,7 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:5000/orchestration/orders/99271053-7720-43de-a2fa-74a7b4d61e48/accept
+POST http://localhost:5000/orchestration/orders/423c53af-0e3f-4659-820b-75b1c6bac2ba/accept
 Content-Type: application/json
 
 {
@@ -26,7 +26,7 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:5000/choreography/orders/dd5b884e-f014-42c4-8c22-71d566508c08/accept
+POST http://localhost:5000/choreography/orders/d821524b-8739-44bb-9023-b0a39a496f41/accept
 Content-Type: application/json
 
 {
