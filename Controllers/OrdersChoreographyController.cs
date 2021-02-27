@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunicationFoodDelivery.Activities;
-using CommunicationFoodDelivery.Contracts;
 using MassTransit;
 using MassTransit.Courier;
 using Microsoft.AspNetCore.Mvc;
+using static CommunicationFoodDelivery.Contracts.Events;
 
 namespace CommunicationFoodDelivery.Controllers
 {
@@ -28,7 +28,7 @@ namespace CommunicationFoodDelivery.Controllers
 
             Cash.Add(orderId, (dto.OrderDetails, dto.Address));
 
-            await _bus.Publish(new Events.OrderPlaced
+            await _bus.Publish(new OrderPlaced
             {
                 OrderId = orderId,
                 OrderDetails = dto.OrderDetails
